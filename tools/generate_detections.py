@@ -1,14 +1,16 @@
 # vim: expandtab:ts=4:sw=4
-import os
-import errno
 import argparse
-import numpy as np
+import errno
+import os
+
 import cv2
+import numpy as np
 import tensorflow.compat.v1 as tf
-    
+
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
 
 def _run_in_batches(f, data_dict, out, batch_size):
     data_len = len(out)

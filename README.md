@@ -72,7 +72,7 @@ After executing one of the above lines, you should see proper .tf files in your 
 Now you can run the object tracker for whichever model you have created, pretrained, tiny, or custom.
 ```
 # yolov3 on video
-python object_tracker.py --video ./data/video/test.mp4 --output ./data/video/results.avi
+python object_tracker.py --video ./data/video/1874.MOV --output ./data/video/results.avi
 
 #yolov3 on webcam 
 python object_tracker.py --video 0 --output ./data/video/results.avi
