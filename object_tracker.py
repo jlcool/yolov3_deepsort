@@ -120,7 +120,7 @@ def main(_argv):
                 continue
             else:
                 break
-
+        img = cv2.flip(img, 0)
         img_in = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img_in = tf.expand_dims(img_in, 0)
         img_in = transform_images(img_in, FLAGS.size)
