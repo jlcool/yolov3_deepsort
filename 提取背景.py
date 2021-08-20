@@ -7,7 +7,9 @@ success, image = vidcap.read()
 n = 1
 while n < 30:
     success, image = vidcap.read()
+    image = cv2.flip(image, 0)
     n += 1
+
 imag = cv2.imwrite('fff.png', image)
 if imag == True:
     print('ok')
