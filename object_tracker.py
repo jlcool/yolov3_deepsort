@@ -219,42 +219,47 @@ def main(_argv):
                 # 截取车辆图片
                 cropped = img[int(bbox[1]):int(bbox[3]),
                               int(bbox[0]):int(bbox[2])]
-                # 传入HyperLPR模型识别车牌信息
-                xinxi = HyperLPR_plate_recognition(cropped)
+                if cropped.size==0:
+                    print('图片为空')
+                if cropped.size!=0:
+                    cv2.imwrite('che.png', cropped)
+                    # 传入HyperLPR模型识别车牌信息
+                    xinxi = HyperLPR_plate_recognition(cropped)
+                
 
-                # 计算车的中心点坐标
-                diet1 = (int(bbox[3])-int(bbox[1]))/2
-                diet2 = (int(bbox[2])-int(bbox[0]))/2
-                x = int(bbox[1]) + diet1
-                y = int(bbox[0]) + diet2
+                    # 计算车的中心点坐标
+                    diet1 = (int(bbox[3])-int(bbox[1]))/2
+                    diet2 = (int(bbox[2])-int(bbox[0]))/2
+                    x = int(bbox[1]) + diet1
+                    y = int(bbox[0]) + diet2
 
-                # 如果车的中心点落在实线的”范围“内，就判断车辆非法越线。
-                for i in k:
-                    i = eval(i)
-                    # 修改
-                    if x > i['y1'] and x < i['y2']:
-                        if x > y*i['k']+i['b']-15 and x < y*i['k']+i['b']+15:
-                            img = cv2ImgAddText(img, '非法越线', int(
-                                bbox[0]), int(bbox[1]+20), (255, 0, 0), 20)
-                            print('car违规！违规类型：越实线！', xinxi)
+                    # 如果车的中心点落在实线的”范围“内，就判断车辆非法越线。
+                    for i in k:
+                        i = eval(i)
+                        # 修改
+                        if x > i['y1'] and x < i['y2']:
+                            if x > y*i['k']+i['b']-15 and x < y*i['k']+i['b']+15:
+                                img = cv2ImgAddText(img, '非法越线', int(
+                                    bbox[0]), int(bbox[1]+20), (255, 0, 0), 20)
+                                print('car违规！违规类型：越实线！', xinxi)
 
-                # 实现车牌信息的择优迭代
-                if str(track.track_id) in chepaixinxi:
-                    if xinxi:
-                        chepai = chepaixinxi[str(track.track_id)]
-                        if chepai[1] < xinxi[0][1]:
-                            cheche = xinxi[0]
-                            chepaixinxi[str(track.track_id)] = cheche
-                            img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
-                                chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
-                        else:
-                            img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
-                                chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
-                elif xinxi:
-                    cheche = xinxi[0]
-                    chepaixinxi[str(track.track_id)] = cheche
-                    img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
-                        chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
+                    # 实现车牌信息的择优迭代
+                    if str(track.track_id) in chepaixinxi:
+                        if xinxi:
+                            chepai = chepaixinxi[str(track.track_id)]
+                            if chepai[1] < xinxi[0][1]:
+                                cheche = xinxi[0]
+                                chepaixinxi[str(track.track_id)] = cheche
+                                img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
+                                    chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
+                            else:
+                                img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
+                                    chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
+                    elif xinxi:
+                        cheche = xinxi[0]
+                        chepaixinxi[str(track.track_id)] = cheche
+                        img = cv2ImgAddText(img, chepaixinxi[str(track.track_id)][0]+':'+str(round(
+                            chepaixinxi[str(track.track_id)][1], 2)), int(bbox[0]), int(bbox[1]), (0, 0, 255), 20)
 
         print('car name:', car_num, 'person num:', person_num)
 
